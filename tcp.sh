@@ -1,12 +1,8 @@
-
+#qq
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
     systempwd="/usr/lib/systemd/system/"
-elif cat /etc/issue | grep -Eqi "debian"; then
-    release="debian"
-    systemPackage="apt-get"
-    systempwd="/lib/systemd/system/"
 elif cat /etc/issue | grep -Eqi "ubuntu"; then
     release="ubuntu"
     systemPackage="apt-get"
