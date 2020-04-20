@@ -1,7 +1,8 @@
 #!/bin/bash
 
-blue(){
-    echo -e "\033[34m\033[01m$1\033[0m"
+#fonts color
+yellow(){
+    echo -e "\033[33m\033[01m$1\033[0m"
 }
 green(){
     echo -e "\033[32m\033[01m$1\033[0m"
@@ -9,10 +10,8 @@ green(){
 red(){
     echo -e "\033[31m\033[01m$1\033[0m"
 }
-version_lt(){
-    test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; 
-}
-#copy from ÇïË®Òİ±ù ss scripts
+
+#copy from ç§‹æ°´é€¸å†° ss scripts
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
@@ -42,6 +41,7 @@ elif cat /proc/version | grep -Eqi "centos|red hat|redhat"; then
     systemPackage="yum"
     systempwd="/usr/lib/systemd/system/"
 fi
+
 function install(){
 cat > /etc/nginx/nginx.conf <<-EOF
 user  root;
@@ -71,14 +71,14 @@ http {
     }
 }
 EOF
-	#ÉèÖÃÎ±×°Õ¾
+	#è®¾ç½®ä¼ªè£…ç«™
 	rm -rf /usr/share/nginx/html/*
 	cd /usr/share/nginx/html/
 	wget https://github.com/atrandys/v2ray-ws-tls/raw/master/web.zip >/dev/null 2>&1
     	unzip web.zip >/dev/null 2>&1
 	systemctl stop nginx
 	sleep 5
-	#ÉêÇëhttpsÖ¤Êé
+	#ç”³è¯·httpsè¯ä¹¦
 	if [ ! -d "/usr/src" ]; then
 	    mkdir /usr/src
 	fi
@@ -97,7 +97,7 @@ EOF
 	rm -f latest
 	wget https://github.com/trojan-gfw/trojan/releases/download/v${latest_version}/trojan-${latest_version}-linux-amd64.tar.xz >/dev/null 2>&1
 	tar xf trojan-${latest_version}-linux-amd64.tar.xz >/dev/null 2>&1
-	#ÏÂÔØtrojan¿Í»§¶Ë
+	#ä¸‹è½½trojanå®¢æˆ·ç«¯
 	wget https://github.com/atrandys/trojan/raw/master/trojan-cli.zip >/dev/null 2>&1
 	wget -P /usr/src/trojan-temp https://github.com/trojan-gfw/trojan/releases/download/v${latest_version}/trojan-${latest_version}-win.zip >/dev/null 2>&1
 	unzip trojan-cli.zip >/dev/null 2>&1
@@ -187,7 +187,7 @@ EOF
 	trojan_path=$(cat /dev/urandom | head -1 | md5sum | head -c 16)
 	mkdir /usr/share/nginx/html/${trojan_path}
 	mv /usr/src/trojan-cli/trojan-cli.zip /usr/share/nginx/html/${trojan_path}/
-	#Ôö¼ÓÆô¶¯½Å±¾
+	#å¢åŠ å¯åŠ¨è„šæœ¬
 	
 cat > ${systempwd}trojan.service <<-EOF
 [Unit]  
@@ -214,19 +214,19 @@ EOF
         --fullchain-file /usr/src/trojan-cert/fullchain.cer \
 	--reloadcmd  "systemctl restart trojan"
 	green "======================================================================"
-	green "TrojanÒÑ°²×°Íê³É£¬ÇëÊ¹ÓÃÒÔÏÂÁ´½ÓÏÂÔØtrojan¿Í»§¶Ë£¬´Ë¿Í»§¶ËÒÑÅäÖÃºÃËùÓĞ²ÎÊı"
-	green "1¡¢¸´ÖÆÏÂÃæµÄÁ´½Ó£¬ÔÚä¯ÀÀÆ÷´ò¿ª£¬ÏÂÔØ¿Í»§¶Ë£¬×¢Òâ´ËÏÂÔØÁ´½Ó½«ÔÚ1¸öĞ¡Ê±ºóÊ§Ğ§"
+	green "Trojanå·²å®‰è£…å®Œæˆï¼Œè¯·ä½¿ç”¨ä»¥ä¸‹é“¾æ¥ä¸‹è½½trojanå®¢æˆ·ç«¯ï¼Œæ­¤å®¢æˆ·ç«¯å·²é…ç½®å¥½æ‰€æœ‰å‚æ•°"
+	green "1ã€å¤åˆ¶ä¸‹é¢çš„é“¾æ¥ï¼Œåœ¨æµè§ˆå™¨æ‰“å¼€ï¼Œä¸‹è½½å®¢æˆ·ç«¯ï¼Œæ³¨æ„æ­¤ä¸‹è½½é“¾æ¥å°†åœ¨1ä¸ªå°æ—¶åå¤±æ•ˆ"
 	blue "http://${your_domain}/$trojan_path/trojan-cli.zip"
-	green "2¡¢½«ÏÂÔØµÄÑ¹Ëõ°ü½âÑ¹£¬´ò¿ªÎÄ¼ş¼Ğ£¬´ò¿ªstart.bat¼´´ò¿ª²¢ÔËĞĞTrojan¿Í»§¶Ë"
-	green "3¡¢´ò¿ªstop.bat¼´¹Ø±ÕTrojan¿Í»§¶Ë"
-	green "4¡¢Trojan¿Í»§¶ËĞèÒª´îÅää¯ÀÀÆ÷²å¼şÊ¹ÓÃ£¬ÀıÈçswitchyomegaµÈ"
+	green "2ã€å°†ä¸‹è½½çš„å‹ç¼©åŒ…è§£å‹ï¼Œæ‰“å¼€æ–‡ä»¶å¤¹ï¼Œæ‰“å¼€start.batå³æ‰“å¼€å¹¶è¿è¡ŒTrojanå®¢æˆ·ç«¯"
+	green "3ã€æ‰“å¼€stop.batå³å…³é—­Trojanå®¢æˆ·ç«¯"
+	green "4ã€Trojanå®¢æˆ·ç«¯éœ€è¦æ­é…æµè§ˆå™¨æ’ä»¶ä½¿ç”¨ï¼Œä¾‹å¦‚switchyomegaç­‰"
 	green "======================================================================"
 	else
         red "==================================="
-	red "httpsÖ¤ÊéÃ»ÓĞÉêÇë³É¹û£¬×Ô¶¯°²×°Ê§°Ü"
-	green "²»Òªµ£ĞÄ£¬Äã¿ÉÒÔÊÖ¶¯ĞŞ¸´Ö¤ÊéÉêÇë"
-	green "1. ÖØÆôVPS"
-	green "2. ÖØĞÂÖ´ĞĞ½Å±¾£¬Ê¹ÓÃĞŞ¸´Ö¤Êé¹¦ÄÜ"
+	red "httpsè¯ä¹¦æ²¡æœ‰ç”³è¯·æˆæœï¼Œè‡ªåŠ¨å®‰è£…å¤±è´¥"
+	green "ä¸è¦æ‹…å¿ƒï¼Œä½ å¯ä»¥æ‰‹åŠ¨ä¿®å¤è¯ä¹¦ç”³è¯·"
+	green "1. é‡å¯VPS"
+	green "2. é‡æ–°æ‰§è¡Œè„šæœ¬ï¼Œä½¿ç”¨ä¿®å¤è¯ä¹¦åŠŸèƒ½"
 	red "==================================="
 	fi
 }
@@ -241,20 +241,20 @@ Port443=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 443`
 if [ -n "$Port80" ]; then
     process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
     red "==========================================================="
-    red "¼ì²âµ½80¶Ë¿Ú±»Õ¼ÓÃ£¬Õ¼ÓÃ½ø³ÌÎª£º${process80}£¬±¾´Î°²×°½áÊø"
+    red "æ£€æµ‹åˆ°80ç«¯å£è¢«å ç”¨ï¼Œå ç”¨è¿›ç¨‹ä¸ºï¼š${process80}ï¼Œæœ¬æ¬¡å®‰è£…ç»“æŸ"
     red "==========================================================="
     exit 1
 fi
 if [ -n "$Port443" ]; then
     process443=`netstat -tlpn | awk -F '[: ]+' '$5=="443"{print $9}'`
     red "============================================================="
-    red "¼ì²âµ½443¶Ë¿Ú±»Õ¼ÓÃ£¬Õ¼ÓÃ½ø³ÌÎª£º${process443}£¬±¾´Î°²×°½áÊø"
+    red "æ£€æµ‹åˆ°443ç«¯å£è¢«å ç”¨ï¼Œå ç”¨è¿›ç¨‹ä¸ºï¼š${process443}ï¼Œæœ¬æ¬¡å®‰è£…ç»“æŸ"
     red "============================================================="
     exit 1
 fi
 CHECK=$(grep SELINUX= /etc/selinux/config | grep -v "#")
 if [ "$CHECK" != "SELINUX=disabled" ]; then
-    green "¼ì²âµ½SELinux¿ªÆô×´Ì¬£¬Ìí¼Ó·ÅĞĞ80/443¶Ë¿Ú¹æÔò"
+    green "æ£€æµ‹åˆ°SELinuxå¼€å¯çŠ¶æ€ï¼Œæ·»åŠ æ”¾è¡Œ80/443ç«¯å£è§„åˆ™"
     yum install -y policycoreutils-python >/dev/null 2>&1
     semanage port -m -t http_port_t -p tcp 80
     semanage port -m -t http_port_t -p tcp 443
@@ -262,19 +262,19 @@ fi
 if [ "$release" == "centos" ]; then
     if  [ -n "$(grep ' 6\.' /etc/redhat-release)" ] ;then
     red "==============="
-    red "µ±Ç°ÏµÍ³²»ÊÜÖ§³Ö"
+    red "å½“å‰ç³»ç»Ÿä¸å—æ”¯æŒ"
     red "==============="
     exit
     fi
     if  [ -n "$(grep ' 5\.' /etc/redhat-release)" ] ;then
     red "==============="
-    red "µ±Ç°ÏµÍ³²»ÊÜÖ§³Ö"
+    red "å½“å‰ç³»ç»Ÿä¸å—æ”¯æŒ"
     red "==============="
     exit
     fi
     firewall_status=`systemctl status firewalld | grep "Active: active"`
     if [ -n "$firewall_status" ]; then
-        green "¼ì²âµ½firewalld¿ªÆô×´Ì¬£¬Ìí¼Ó·ÅĞĞ80/443¶Ë¿Ú¹æÔò"
+        green "æ£€æµ‹åˆ°firewalldå¼€å¯çŠ¶æ€ï¼Œæ·»åŠ æ”¾è¡Œ80/443ç«¯å£è§„åˆ™"
         firewall-cmd --zone=public --add-port=80/tcp --permanent
 	firewall-cmd --zone=public --add-port=443/tcp --permanent
 	firewall-cmd --reload
@@ -283,13 +283,13 @@ if [ "$release" == "centos" ]; then
 elif [ "$release" == "ubuntu" ]; then
     if  [ -n "$(grep ' 14\.' /etc/os-release)" ] ;then
     red "==============="
-    red "µ±Ç°ÏµÍ³²»ÊÜÖ§³Ö"
+    red "å½“å‰ç³»ç»Ÿä¸å—æ”¯æŒ"
     red "==============="
     exit
     fi
     if  [ -n "$(grep ' 12\.' /etc/os-release)" ] ;then
     red "==============="
-    red "µ±Ç°ÏµÍ³²»ÊÜÖ§³Ö"
+    red "å½“å‰ç³»ç»Ÿä¸å—æ”¯æŒ"
     red "==============="
     exit
     fi
@@ -311,27 +311,27 @@ $systemPackage -y install  nginx wget unzip zip curl tar >/dev/null 2>&1
 systemctl enable nginx
 systemctl stop nginx
 green "======================="
-blue "ÇëÊäÈë°ó¶¨µ½±¾VPSµÄÓòÃû"
+blue "è¯·è¾“å…¥ç»‘å®šåˆ°æœ¬VPSçš„åŸŸå"
 green "======================="
 read your_domain
 real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
 local_addr=`curl ipv4.icanhazip.com`
 if [ $real_addr == $local_addr ] ; then
 	green "=========================================="
-	green "       ÓòÃû½âÎöÕı³££¬¿ªÊ¼°²×°trojan"
+	green "       åŸŸåè§£ææ­£å¸¸ï¼Œå¼€å§‹å®‰è£…trojan"
 	green "=========================================="
 	sleep 1s
         install
 	
 else
         red "===================================="
-	red "ÓòÃû½âÎöµØÖ·Óë±¾VPS IPµØÖ·²»Ò»ÖÂ"
-	red "ÈôÄãÈ·ÈÏ½âÎö³É¹¦Äã¿ÉÇ¿ÖÆ½Å±¾¼ÌĞøÔËĞĞ"
+	red "åŸŸåè§£æåœ°å€ä¸æœ¬VPS IPåœ°å€ä¸ä¸€è‡´"
+	red "è‹¥ä½ ç¡®è®¤è§£ææˆåŠŸä½ å¯å¼ºåˆ¶è„šæœ¬ç»§ç»­è¿è¡Œ"
 	red "===================================="
-	read -p "ÊÇ·ñÇ¿ÖÆÔËĞĞ ?ÇëÊäÈë [Y/n] :" yn
+	read -p "æ˜¯å¦å¼ºåˆ¶è¿è¡Œ ?è¯·è¾“å…¥ [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
-            green "Ç¿ÖÆ¼ÌĞøÔËĞĞ½Å±¾"
+            green "å¼ºåˆ¶ç»§ç»­è¿è¡Œè„šæœ¬"
 	    sleep 1s
 	    install
 	else
@@ -348,13 +348,13 @@ Port80=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 80`
 if [ -n "$Port80" ]; then
     process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
     red "==========================================================="
-    red "¼ì²âµ½80¶Ë¿Ú±»Õ¼ÓÃ£¬Õ¼ÓÃ½ø³ÌÎª£º${process80}£¬±¾´Î°²×°½áÊø"
+    red "æ£€æµ‹åˆ°80ç«¯å£è¢«å ç”¨ï¼Œå ç”¨è¿›ç¨‹ä¸ºï¼š${process80}ï¼Œæœ¬æ¬¡å®‰è£…ç»“æŸ"
     red "==========================================================="
     exit 1
 fi
 green "======================="
-blue "ÇëÊäÈë°ó¶¨µ½±¾VPSµÄÓòÃû"
-blue "Îñ±ØÓëÖ®Ç°Ê§°ÜÊ¹ÓÃµÄÓòÃûÒ»ÖÂ"
+blue "è¯·è¾“å…¥ç»‘å®šåˆ°æœ¬VPSçš„åŸŸå"
+blue "åŠ¡å¿…ä¸ä¹‹å‰å¤±è´¥ä½¿ç”¨çš„åŸŸåä¸€è‡´"
 green "======================="
 read your_domain
 real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
@@ -366,25 +366,25 @@ if [ $real_addr == $local_addr ] ; then
         --fullchain-file /usr/src/trojan-cert/fullchain.cer \
 	--reloadcmd  "systemctl restart trojan"
     if test -s /usr/src/trojan-cert/fullchain.cer; then
-        green "Ö¤ÊéÉêÇë³É¹¦"
-	green "Çë½«/usr/src/trojan-cert/ÏÂµÄfullchain.cerÏÂÔØ·Åµ½¿Í»§¶Ëtrojan-cliÎÄ¼ş¼Ğ"
+        green "è¯ä¹¦ç”³è¯·æˆåŠŸ"
+	green "è¯·å°†/usr/src/trojan-cert/ä¸‹çš„fullchain.cerä¸‹è½½æ”¾åˆ°å®¢æˆ·ç«¯trojan-cliæ–‡ä»¶å¤¹"
 	systemctl restart trojan
 	systemctl start nginx
     else
-    	red "ÉêÇëÖ¤ÊéÊ§°Ü"
+    	red "ç”³è¯·è¯ä¹¦å¤±è´¥"
     fi
 else
     red "================================"
-    red "ÓòÃû½âÎöµØÖ·Óë±¾VPS IPµØÖ·²»Ò»ÖÂ"
-    red "±¾´Î°²×°Ê§°Ü£¬ÇëÈ·±£ÓòÃû½âÎöÕı³£"
+    red "åŸŸåè§£æåœ°å€ä¸æœ¬VPS IPåœ°å€ä¸ä¸€è‡´"
+    red "æœ¬æ¬¡å®‰è£…å¤±è´¥ï¼Œè¯·ç¡®ä¿åŸŸåè§£ææ­£å¸¸"
     red "================================"
 fi	
 }
 
 function remove_trojan(){
     red "================================"
-    red "¼´½«Ğ¶ÔØtrojan"
-    red "Í¬Ê±Ğ¶ÔØ°²×°µÄnginx"
+    red "å³å°†å¸è½½trojan"
+    red "åŒæ—¶å¸è½½å®‰è£…çš„nginx"
     red "================================"
     systemctl stop trojan
     systemctl disable trojan
@@ -397,7 +397,7 @@ function remove_trojan(){
     rm -rf /usr/src/trojan*
     rm -rf /usr/share/nginx/html/*
     green "=============="
-    green "trojanÉ¾³ıÍê±Ï"
+    green "trojanåˆ é™¤å®Œæ¯•"
     green "=============="
 }
 
@@ -409,7 +409,7 @@ function update_trojan(){
     rm -f latest
     rm -f trojan.tmp
     if version_lt "$curr_version" "$latest_version"; then
-        green "µ±Ç°°æ±¾$curr_version,×îĞÂ°æ±¾$latest_version,¿ªÊ¼Éı¼¶¡­¡­"
+        green "å½“å‰ç‰ˆæœ¬$curr_version,æœ€æ–°ç‰ˆæœ¬$latest_version,å¼€å§‹å‡çº§â€¦â€¦"
         mkdir trojan_update_temp && cd trojan_update_temp
         wget https://github.com/trojan-gfw/trojan/releases/download/v${latest_version}/trojan-${latest_version}-linux-amd64.tar.xz >/dev/null 2>&1
         tar xf trojan-${latest_version}-linux-amd64.tar.xz >/dev/null 2>&1
@@ -417,10 +417,10 @@ function update_trojan(){
         cd .. && rm -rf trojan_update_temp
         systemctl restart trojan
 	/usr/src/trojan/trojan -v 2>trojan.tmp
-	green "trojanÉı¼¶Íê³É£¬µ±Ç°°æ±¾£º`cat trojan.tmp | grep "trojan" | awk '{print $4}'`"
+	green "trojanå‡çº§å®Œæˆï¼Œå½“å‰ç‰ˆæœ¬ï¼š`cat trojan.tmp | grep "trojan" | awk '{print $4}'`"
 	rm -f trojan.tmp
     else
-        green "µ±Ç°°æ±¾$curr_version,×îĞÂ°æ±¾$latest_version,ÎŞĞèÉı¼¶"
+        green "å½“å‰ç‰ˆæœ¬$curr_version,æœ€æ–°ç‰ˆæœ¬$latest_version,æ— éœ€å‡çº§"
     fi
    
    
@@ -429,23 +429,23 @@ function update_trojan(){
 start_menu(){
     clear
     green " ======================================="
-    green " ½éÉÜ£ºÒ»¼ü°²×°trojan      "
-    green " ÏµÍ³£ºcentos7+/debian9+/ubuntu16.04+"
-    green " ÍøÕ¾£ºwww.atrandys.com              "
-    green " Youtube£ºRandy's ±¤Àİ                "
-    blue " ÉùÃ÷£º"
-    red " *Çë²»ÒªÔÚÈÎºÎÉú²ú»·¾³Ê¹ÓÃ´Ë½Å±¾"
-    red " *Çë²»ÒªÓĞÆäËû³ÌĞòÕ¼ÓÃ80ºÍ443¶Ë¿Ú"
-    red " *ÈôÊÇµÚ¶ş´ÎÊ¹ÓÃ½Å±¾£¬ÇëÏÈÖ´ĞĞĞ¶ÔØtrojan"
+    green " ä»‹ç»ï¼šä¸€é”®å®‰è£…trojan      "
+    green " ç³»ç»Ÿï¼šcentos7+/debian9+/ubuntu16.04+"
+    green " ç½‘ç«™ï¼šwww.atrandys.com              "
+    green " Youtubeï¼šRandy's å ¡å’                "
+    blue " å£°æ˜ï¼š"
+    red " *è¯·ä¸è¦åœ¨ä»»ä½•ç”Ÿäº§ç¯å¢ƒä½¿ç”¨æ­¤è„šæœ¬"
+    red " *è¯·ä¸è¦æœ‰å…¶ä»–ç¨‹åºå ç”¨80å’Œ443ç«¯å£"
+    red " *è‹¥æ˜¯ç¬¬äºŒæ¬¡ä½¿ç”¨è„šæœ¬ï¼Œè¯·å…ˆæ‰§è¡Œå¸è½½trojan"
     green " ======================================="
     echo
-    green " 1. ×¼±¸ºÃÁËÑ¡Õâ¸ö °²×°trojan"
-    red " 2. ²»ÍæÁË£¿Ñ¡Õâ¸ö  Ğ¶ÔØtrojan"
-    green " 3. °æ±¾²»¹»ÁË£¿  Éı¼¶trojan"
-    green " 4.Ö¤ÊéÓĞÎÊÌâ£¿  ĞŞ¸´Ö¤Êé"
-    blue " 0. ²»ÍæÁË°İ°İ"
+    green " 1. å‡†å¤‡å¥½äº†é€‰è¿™ä¸ª å®‰è£…trojan"
+    red " 2. ä¸ç©äº†ï¼Ÿé€‰è¿™ä¸ª  å¸è½½trojan"
+    green " 3. ç‰ˆæœ¬ä¸å¤Ÿäº†ï¼Ÿ  å‡çº§trojan"
+    green " 4.è¯ä¹¦æœ‰é—®é¢˜ï¼Ÿ  ä¿®å¤è¯ä¹¦"
+    blue " 0. ä¸ç©äº†æ‹œæ‹œ"
     echo
-    read -p "ÇëÊäÈëÊı×Ö :" num
+    read -p "è¯·è¾“å…¥æ•°å­— :" num
     case "$num" in
     1)
     install_trojan
@@ -464,7 +464,7 @@ start_menu(){
     ;;
     *)
     clear
-    red "ÇëÊäÈëÕıÈ·Êı×Ö"
+    red "è¯·è¾“å…¥æ­£ç¡®æ•°å­—"
     sleep 1s
     start_menu
     ;;
@@ -479,20 +479,20 @@ function bbr_boost_sh(){
 start_menu(){
     clear
     green " ===================================="
-    green "  Jeffern Trojan Ò»¼ü°²×°×Ô¶¯½Å±¾      "
-    green " ÏµÍ³£ºcentos7+/debian9+/ubuntu16.04+"
+    green "  Jeffern Trojan ä¸€é”®å®‰è£…è‡ªåŠ¨è„šæœ¬      "
+    green " ç³»ç»Ÿï¼šcentos7+/debian9+/ubuntu16.04+"
     green " Twitter:@jeffern12               "
     green " ===================================="
     echo
     red " ===================================="
-    yellow " 1. ×ßÆğ ¿ªÊ¼°²×°Trojan"
+    yellow " 1. èµ°èµ· å¼€å§‹å®‰è£…Trojan"
     red " ===================================="
-    yellow " 2. À´¼Ó¸öËÙ¶È°É Ò»¼ü°²×°BBR PLUS"
+    yellow " 2. æ¥åŠ ä¸ªé€Ÿåº¦å§ ä¸€é”®å®‰è£…BBR PLUS"
     red " ===================================="
-    yellow " 0. ²»ÍæÁË£¬°İ°İ£¡"
+    yellow " 0. ä¸ç©äº†ï¼Œæ‹œæ‹œï¼"
     red " ===================================="
     echo
-    read -p "ÇëÊäÈëÊı×Ö:" num
+    read -p "è¯·è¾“å…¥æ•°å­—:" num
     case "$num" in
     1)
     install_trojan
@@ -504,7 +504,7 @@ start_menu(){
     ;;
     *)
     clear
-    red "ÇëÊäÈëÕıÈ·Êı×Ö"
+    red "è¯·è¾“å…¥æ­£ç¡®æ•°å­—"
     sleep 1s
     start_menu
     ;;
